@@ -1,45 +1,44 @@
-document.addEventListener('DOMContentLoaded', () => {
-    fetchJobsForSelect();
-    fetchJobSummary();
+// Mengambil referensi form dari HTML
+const jobForm = document.getElementById('job-form');
+const costForm = document.getElementById('cost-form');
 
-    document.getElementById('job-form').addEventListener('submit', handleCreateJob);
-    document.getElementById('cost-form').addEventListener('submit', handleAddCost);
-});
+// 1. Event listener saat tombol "Buat Pesanan" diklik
+if (jobForm) {
+    jobForm.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Menahan agar halaman tidak mereload/refresh
 
-// Helper: Format Angka ke Rupiah
-const formatRupiah = (number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
-};
+        // Ambil nilai dari input form
+        const jobNumber = document.getElementById('job-number').value;
+        const customerName = document.getElementById('customer-name').value;
+        const productName = document.getElementById('product-name').value;
+        const quantity = document.getElementById('quantity').value;
 
-// 1. Tambah Pesanan Baru
-async function handleCreateJob(e) {
-    e.preventDefault();
-    const jobNumber = document.getElementById('job-number').value;
-    const customerName = document.getElementById('customer-name').value;
-    const productName = document.getElementById('product-name').value;
-    const quantity = parseInt(document.getElementById('quantity').value);
+        try {
+            // Simpan data ke tabel 'jobs' di Supabase
+            const { data, error } = await supabaseClient
+                .from('jobs')
+                .insert([
+                    { 
+                        job_number: jobNumber, 
+                        customer_name: customerName, 
+                        product_name: productName, 
+                        quantity: parseInt(quantity) 
+                    }
+                ]);
 
-    const { data, error } = await supabaseClient
-        .from('jobs')
-        .insert([{ 
-            job_number: jobNumber, 
-            customer_name: customerName, 
-            product_name: productName, 
-            quantity: quantity 
-        }]);
-
-    if (error) {
-        alert('Gagal menambah pesanan: ' + error.message);
-    } else {
-        alert('Pesanan berhasil dibuat!');
-        document.getElementById('job-form').reset();
-        fetchJobsForSelect();
-        fetchJobSummary();
-    }
-}
-
-// 2. Tambah Biaya Produksi ke Pesanan
-async function handleAddCost(e) {
+            if (error) {
+                console.error('Error Supabase:', error);
+                alert('Gagal membuat pesanan: ' + error.message);
+            } else {
+                alert('Pesanan berhasil dibuat!');
+                jobForm.reset(); // Kosongkan form setelah berhasil
+            }
+        } catch (err) {
+            console.error('Error Sistem:', err);
+            alert('Terjadi kesalahan pada sistem/koneksi Supabase.');
+        }
+    });
+}Cost(e) {
     e.preventDefault();
     const jobId = document.getElementById('select-job').value;
     const category = document.getElementById('cost-category').value;
