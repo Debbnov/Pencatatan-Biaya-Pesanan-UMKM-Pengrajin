@@ -4,4 +4,4 @@ Aplikasi berbasis web untuk membantu pencatatan biaya pesanan pada UMKM pengraji
 
 ## 🔗 Link Aplikasi
 
-👉 [Klik di sini untuk membuka aplikasi](https://debbonov.github.io/Pencatatan-Biaya-Pesanan-UMKM-Pengrajin/)
+👉 [Klik di sini untuk membuka aplikasi](https://Debbonov.github.io/Pencatatan-Biaya-Pesanan-UMKM-Pengrajin/)
